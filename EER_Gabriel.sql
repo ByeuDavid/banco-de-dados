@@ -6,7 +6,7 @@ show tables;
 create table tb_usuarios(
 iduser int primary key,
 usuario varchar(50) not null,
-fone varchar(15) not null,
+fone varchar(15),
 login varchar(50) not null unique,
 senha varchar(50) not null,
 perfil varchar(50) not null);
