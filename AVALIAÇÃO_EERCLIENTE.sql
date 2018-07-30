@@ -68,3 +68,64 @@ insert into tb_cliente values
 
 
 select * from tb_cliente;
+
+use dbinfox;
+
+create table tb_os(
+idos int auto_increment primary key,
+tipo varchar (15) not null,
+situacao varchar(20) not null,
+equipamento varchar(200) not null,
+defeito varchar(200) not null,
+servico varchar(200), 
+tecnico varchar(200),
+valor decimal(10,2));
+describe tb_os;
+
+
+-- Adicionando data e hora automática
+alter table tb_os add data_os timestamp default current_timestamp
+after idos;
+
+-- Comando para alterar o start do inicio do auto incremento
+alter table tb_os auto_increment = 10000;
+
+-- Relacionando
+alter table tb_os add idcli int;
+alter table tb_os add constraint cliente_os
+foreign key(idcli)
+references tb_cliente(idcli)
+on delete no action;
+
+-- Criando um cliente
+
+insert into tb_cliente values
+(NULL, '123.456.789-11', 'Gabriel David','49044-499', 'Rua', 'A8', '21', 'Padaria do Z', 'Santa Maria', 'Aracaju', 'SE',
+'(79)4002-8921', '(79)9002-8932', 'GABRIELDAVID@GMAIL.COM');
+
+update tb_cliente set fone1= '4201-8329' where idcli = 6;
+
+
+select * from tb_cliente;
+
+-- Cadastrando OS 
+
+insert into tb_os (idcli,tipo,situacao,equipamento,defeito,servico,tecnico,valor)
+values ('1','Conserto','Aprovado','Celular','Display quebrado','Troca de display','Gabriel Barbosa','200');
+
+insert into tb_os (idcli,tipo,situacao,equipamento,defeito,servico,tecnico,valor)
+values ('6','Conserto','Aprovado','PC','Não Liga','Troca de Fonte','Gabriel Barbosa','250');
+
+insert into tb_os (idcli,tipo,situacao,equipamento,defeito,servico,tecnico,valor)
+values ('6','Conserto','Aprovado','PC','Vírus','Formatação','Gabriel Barbosa','80');
+
+
+select * from tb_os;
+
+-- Emitindo um relátorio personalizado, unindo todos os dados da OS
+
+select 
+O.idos as OS, equipamento as Equipamento, valor as Valor, C.nomecli as Nome, fonecli as Telefone, 
+emailcli as Email, defeito as Defeito, situacao as Situação, servico as Serviço, tecnico as Técnico, tipo as Tipo
+from tb_os as O
+inner join tb_clientes as C on (O.idcli = C.idcli);
